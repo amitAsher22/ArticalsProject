@@ -14,7 +14,6 @@ const myRoute = require("./routes/myRouter");
 const port = process.env.port || 3000;
 
 app.use("/", myRoute);
-// get information table from postgrse
 
 // server listen port 4000/3000
 app.listen(port, () => {

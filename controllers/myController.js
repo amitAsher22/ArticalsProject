@@ -61,6 +61,7 @@ const show4SubArticals = async (req, res) => {
     timeout: 0,
   });
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////////
   const ONEartical = [];
   const ONEtitle = await page.$eval(
     ".slotTitle.medium span",
@@ -72,7 +73,7 @@ const show4SubArticals = async (req, res) => {
   );
   const ONElink = await page.$eval(".mediaItems span a", (elm) => elm.href);
   const imageUrl = await page.$eval(".SiteImageMedia ", (img) => img.src);
-  ONEartical.push(ONEtitle, ONEDescription, ONElink, imageUrl);
+  ONEartical.push(ONEtitle, ONEDescription, ONElink, imageUrl); //// push into ONEartical array
 
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   const TWOartical = [];
