@@ -91,7 +91,22 @@ const show4SubArticals = async (req, res) => {
     }))
   );
 
-  console.log(dataMap);
+  const linkMap = await page.evaluate(() =>
+    Array.from(
+      document.querySelectorAll(".textDiv a[data-tb-link]"),
+      (link) => ({
+        link: link.href,
+      })
+    )
+  );
+
+  const imageMap = await page.evaluate(() =>
+    Array.from(document.querySelectorAll(".mediaItems span img "), (img) => ({
+      image: img.src,
+    }))
+  );
+
+  console.log(imageMap);
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
