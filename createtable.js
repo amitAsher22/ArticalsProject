@@ -10,14 +10,11 @@ const client = new Client({
 });
 
 const query = `
-CREATE TABLE users (
-    email varchar,
-    firstName varchar,
-    lastName varchar,
-    age int
+CREATE TABLE articals (  
+    title varchar[],
+    description text
 );
 `;
-
 client.query(query, (err, res) => {
   if (err) {
     console.error(err);

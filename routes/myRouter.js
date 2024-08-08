@@ -7,7 +7,7 @@ const myController = require("../controllers/myController.js");
 //
 // Requests
 router.get("/getTableWebsites", myController.getTableWebsites);
-router.get("/getTableData", myController.getTableData);
+router.get("/getTablearticals", myController.getTablearticals);
 router.get("/getTableStatistics", myController.getTableStatistics);
 router.get("/", myController.homePage);
 router.get("/presentNewsYnet", myController.showMainArticalFromYnet);

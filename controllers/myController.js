@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const client = require("../database");
 const router = Router();
+const schedule = require("node-schedule");
 
 /// Use Puppeteer
 const puppeteer = require("puppeteer");
@@ -19,10 +20,15 @@ const getTableStatistics = async (req, res) => {
   console.log(result);
   res.status(200).send("get information from Table statistics");
 };
-const getTableData = async (req, res) => {
-  const result = await client.query("select * from data");
-  console.log(result);
-  res.status(200).send("get information from Table Data");
+const getTablearticals = async (req, res) => {
+  const result = await client.query("select * from articals", (err, res) => {
+    if (!err) {
+      console.log(res.rows);
+    } else {
+      console.log(err.message);
+    }
+  });
+  res.status(200).send("get information from Table articals");
 };
 const showMainArticalFromYnet = async (req, res) => {
   const browser = await puppeteer.launch();
@@ -62,33 +68,40 @@ const show4SubArticals = async (req, res) => {
   });
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////
-  const ONEartical = [];
-  const ONEtitle = await page.$eval(
-    ".slotTitle.medium span",
-    (title) => title.innerHTML
-  );
-  const ONEDescription = await page.$eval(
-    ".slotSubTitle span",
-    (title) => title.innerHTML
-  );
-  const ONElink = await page.$eval(".mediaItems span a", (elm) => elm.href);
-  const imageUrl = await page.$eval(".SiteImageMedia ", (img) => img.src);
-  ONEartical.push(ONEtitle, ONEDescription, ONElink, imageUrl); //// push into ONEartical array
+  // const ONEartical = [];
+  // const ONEtitle = await page.$eval(
+  //   ".slotTitle.medium span",
+  //   (title) => title.innerHTML
+  // );
+  // const ONEDescription = await page.$eval(
+  //   ".slotSubTitle span",
+  //   (title) => title.innerHTML
+  // );
+  // const ONElink = await page.$eval(".mediaItems span a", (elm) => elm.href);
+  // const imageUrl = await page.$eval(".SiteImageMedia ", (img) => img.src);
+  // ONEartical.push(ONEtitle, ONEDescription, ONElink, imageUrl); //// push into ONEartical array
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
-  const TWOartical = [];
+  // const TWOartical = [];
 
-  const dataMap = await page.evaluate(() =>
-    Array.from(document.querySelectorAll(".textDiv "), (info) => ({
-      title: info.querySelector(".slotTitle span").innerHTML,
-    }))
+  const TitleMap = await page.evaluate(() =>
+    Array.from(
+      document.querySelectorAll(".textDiv "),
+      (info) => info.querySelector(".slotTitle span").innerHTML
+    )
   );
   const descriptionMap = await page.evaluate(() =>
-    Array.from(document.querySelectorAll(".textDiv "), (info) => ({
-      description: info.querySelector(".slotSubTitle span").innerHTML,
-    }))
+    Array.from(
+      document.querySelectorAll(".textDiv a[data-tb-link] "),
+
+      (info) => ({
+        title: info.querySelector(".slotTitle span").innerHTML,
+        description: info.querySelector(".slotSubTitle span").innerHTML,
+        link: info.href,
+      })
+    )
   );
 
   const linkMap = await page.evaluate(() =>
@@ -106,7 +119,7 @@ const show4SubArticals = async (req, res) => {
     }))
   );
 
-  console.log(imageMap);
+  console.log(descriptionMap);
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -116,10 +129,14 @@ const show4SubArticals = async (req, res) => {
   res.status(200).send(" 5 articals Ynet");
 };
 
+// const job = schedule.scheduleJob(" 59 * * * * *", () => {
+//   getTableData();
+// });
+
 // Export of all methods as object
 module.exports = {
   getTableWebsites,
-  getTableData,
+  getTablearticals,
   getTableStatistics,
   homePage,
   showMainArticalFromYnet,
